@@ -6,7 +6,7 @@ import io
 from base64 import b64encode
 from flask_cors import CORS
 
-app = Flask(_name_)
+app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "https://www.khojcommunity.com"}}) 
 
 def add_text_to_badge(username):
