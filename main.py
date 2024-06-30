@@ -6,7 +6,7 @@ import io
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "https://www.khojcommunity.com"}})
+CORS(app, resources={r"/*": {"origins": "https://www.khojcommunity.com"}})
 
 def add_text_to_badge(username):
     badge_temp = ['./badges/1.png','./badges/2.png', './badges/3.png', './badges/4.png', './badges/5.png']
