@@ -9,10 +9,10 @@ app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "https://www.khojcommunity.com"}})
 
 def add_text_to_badge(username):
-    badge_temp = ['./1.png','./2.png', './3.png', './4.png', './5.png']
+    badge_temp = ['./badges/1.png','./badges/2.png', './badges/3.png', './badges/4.png', './badges/5.png']
     image_path = random.choice(badge_temp)  
     
-    if image_path != './1.png':
+    if image_path != './badges/1.png':
         with Image.open(image_path) as img:
             txt = Image.new('RGBA', img.size, (255,255,255,0))
             draw = ImageDraw.Draw(txt)
