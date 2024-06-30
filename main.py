@@ -61,5 +61,5 @@ def generate_badge():
     badge_image_data = add_text_to_badge(username)
     return jsonify({"image_data": badge_image_data})
 
-if _name_ == '_main_':
+if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
