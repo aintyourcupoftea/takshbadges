@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory  # Import send_from_directory
+from flask import Flask, request, jsonify, send_from_directory
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import random
 from datetime import datetime
@@ -77,4 +77,8 @@ def download_badge(filename):
     return send_from_directory('uploads', filename)
 
 if __name__ == '__main__':
+    # Create the uploads directory if it doesn't exist
+    if not os.path.exists('uploads'):
+        os.makedirs('uploads')
+
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
