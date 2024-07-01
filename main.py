@@ -1,13 +1,20 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory  # Import send_from_directory
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import random
 from datetime import datetime
 import io
 from base64 import b64encode
 from flask_cors import CORS
+import os
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "https://www.khojcommunity.com"}}) 
+
+# Define a function to generate a unique filename
+def generate_unique_filename(extension=".png"):
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    random_part = ''.join(random.choices('abcdefghijklmnopqrstuvwxyz', k=5))
+    return f"badge_{timestamp}_{random_part}{extension}"
 
 def add_text_to_badge(username):
     badge_temp = ['./badges/1.png', './badges/2.png', './badges/3.png', './badges/4.png', './badges/5.png']
@@ -48,8 +55,12 @@ def add_text_to_badge(username):
         buffered = io.BytesIO()
         img.save(buffered, format="PNG")
         img_str = b64encode(buffered.getvalue()).decode()
+        
+        # Save the image to a temporary file 
+        filename = generate_unique_filename()
+        img.save(os.path.join('uploads', filename))
 
-        return f"data:image/png;base64,{img_str}" 
+        return f"data:image/png;base64,{img_str}", filename
 
 @app.route('/gen_badge', methods=['POST'])
 def generate_badge():
@@ -58,8 +69,12 @@ def generate_badge():
     if not username:
         return jsonify({"error": "Username is required"}), 400
 
-    badge_image_data = add_text_to_badge(username)
-    return jsonify({"image_data": badge_image_data})
+    badge_image_data, filename = add_text_to_badge(username)
+    return jsonify({"image_data": badge_image_data, "download_url": f"/download/{filename}"})
+
+@app.route('/download/<filename>')
+def download_badge(filename):
+    return send_from_directory('uploads', filename)
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
